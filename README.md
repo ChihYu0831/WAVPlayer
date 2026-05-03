@@ -46,5 +46,9 @@
 4. 按下「停止播放」可停止播放並重置進度。
 5. 按下「重複播放」可啟用循環播放功能。
 
+
 <img width="650" height="521" alt="image" src="https://github.com/user-attachments/assets/e9dd4163-95b6-4ee9-a99a-8082acedd402" />
+
+<img width="645" height="517" alt="image" src="https://github.com/user-attachments/assets/f58e0404-d37e-431e-b51e-ec00a3fd11d6" />
+
 
