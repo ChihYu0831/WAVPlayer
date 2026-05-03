@@ -51,6 +51,7 @@
             this.grpPath.Controls.Add(this.btnBrowse);
             this.grpPath.Controls.Add(this.txtPath);
             this.grpPath.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.grpPath.ForeColor = System.Drawing.Color.MidnightBlue;
             this.grpPath.Location = new System.Drawing.Point(12, 25);
             this.grpPath.Name = "grpPath";
             this.grpPath.Size = new System.Drawing.Size(486, 100);
@@ -60,16 +61,19 @@
             // 
             // btnBrowse
             // 
+            this.btnBrowse.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnBrowse.ForeColor = System.Drawing.SystemColors.Highlight;
             this.btnBrowse.Location = new System.Drawing.Point(385, 31);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(75, 47);
             this.btnBrowse.TabIndex = 3;
             this.btnBrowse.Text = "瀏覽";
-            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // txtPath
             // 
+            this.txtPath.ForeColor = System.Drawing.SystemColors.Highlight;
             this.txtPath.Location = new System.Drawing.Point(28, 41);
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(324, 29);
@@ -82,6 +86,7 @@
             this.grpButton.Controls.Add(this.btnLoop);
             this.grpButton.Controls.Add(this.btnPlay);
             this.grpButton.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.grpButton.ForeColor = System.Drawing.Color.MidnightBlue;
             this.grpButton.Location = new System.Drawing.Point(12, 158);
             this.grpButton.Name = "grpButton";
             this.grpButton.Size = new System.Drawing.Size(486, 100);
@@ -91,42 +96,50 @@
             // 
             // btnEnd
             // 
+            this.btnEnd.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnEnd.ForeColor = System.Drawing.SystemColors.Highlight;
             this.btnEnd.Location = new System.Drawing.Point(365, 33);
             this.btnEnd.Name = "btnEnd";
             this.btnEnd.Size = new System.Drawing.Size(85, 47);
             this.btnEnd.TabIndex = 7;
             this.btnEnd.Text = "結束程式";
-            this.btnEnd.UseVisualStyleBackColor = true;
+            this.btnEnd.UseVisualStyleBackColor = false;
             this.btnEnd.Click += new System.EventHandler(this.btnEnd_Click);
             // 
             // btnStop
             // 
+            this.btnStop.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnStop.ForeColor = System.Drawing.SystemColors.Highlight;
             this.btnStop.Location = new System.Drawing.Point(257, 33);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(85, 47);
             this.btnStop.TabIndex = 6;
             this.btnStop.Text = "停止播放";
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnLoop
             // 
+            this.btnLoop.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnLoop.ForeColor = System.Drawing.SystemColors.Highlight;
             this.btnLoop.Location = new System.Drawing.Point(149, 33);
             this.btnLoop.Name = "btnLoop";
             this.btnLoop.Size = new System.Drawing.Size(85, 47);
             this.btnLoop.TabIndex = 5;
             this.btnLoop.Text = "重複播放";
-            this.btnLoop.UseVisualStyleBackColor = true;
+            this.btnLoop.UseVisualStyleBackColor = false;
             this.btnLoop.Click += new System.EventHandler(this.btnLoop_Click);
             // 
             // btnPlay
             // 
+            this.btnPlay.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.btnPlay.ForeColor = System.Drawing.SystemColors.Highlight;
             this.btnPlay.Location = new System.Drawing.Point(41, 33);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(85, 47);
             this.btnPlay.TabIndex = 4;
             this.btnPlay.Text = "播放一次";
-            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // ofdWAVFile
@@ -150,6 +163,7 @@
             // lblTime
             // 
             this.lblTime.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblTime.ForeColor = System.Drawing.Color.MidnightBlue;
             this.lblTime.Location = new System.Drawing.Point(370, 308);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(128, 23);
@@ -160,7 +174,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.ClientSize = new System.Drawing.Size(512, 380);
             this.Controls.Add(this.lblTime);
             this.Controls.Add(this.trackBarProgress);
