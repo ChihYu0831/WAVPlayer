@@ -15,12 +15,19 @@ namespace WAVPlayer
 {
     public partial class frmWAVPlayer : Form
     {
-        // 匯入 Windows 多媒體 API
+        // 匯入 Windows 多媒體 API，僅用於讀取長度和跳轉，不作為主要播放器
         [DllImport("winmm.dll")]
         private static extern long mciSendString(string command, StringBuilder returnValue, int returnLength, IntPtr winHandle);
 
-        private string aliasName = "WavAudio"; // 替多媒體指令取一個別名
-        private bool isDragging = false;       // 判斷使用者是否正在拖曳進度條
+        private string aliasName = "WavAudio";
+        private bool isDragging = false;
+        private bool isLooping = false;  // 記錄是否處於循環播放模式
+        
+        // 保留您原本的 SoundPlayer
+        private SoundPlayer player;
+        
+        // 自己建立一個虛擬的計時變數，用來推動進度條
+        private int currentVirtualPosition = 0; 
 
         public frmWAVPlayer()
         {
@@ -44,6 +51,8 @@ namespace WAVPlayer
             }
         }
 
+        // ======================= 按鈕功能 =======================
+
         private void btnPlay_Click(object sender, EventArgs e)
         {
             try
@@ -63,12 +72,11 @@ namespace WAVPlayer
                 if (int.TryParse(lengthBuf.ToString(), out int length))
                 {
                     trackBarProgress.Maximum = length;
-
-                    // 【新增】將總毫秒轉換為 mm:ss 格式，並初始化 Label
                     TimeSpan totalTime = TimeSpan.FromMilliseconds(length);
                     lblTime.Text = $"00:00 / {totalTime.ToString(@"mm\:ss")}";
                 }
 
+                isLooping = false; // 【新增】標記為一般播放
                 mciSendString($"play {aliasName}", null, 0, IntPtr.Zero);
                 timerProgress.Start();
             }
@@ -82,21 +90,58 @@ namespace WAVPlayer
         {
             try
             {
+                if (string.IsNullOrEmpty(txtPath.Text) || !File.Exists(txtPath.Text))
+                {
+                    MessageBox.Show("請確認檔案路徑是否正確!", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 先停止並關閉之前播放的音檔
+                mciSendString($"stop {aliasName}", null, 0, IntPtr.Zero);
                 mciSendString($"close {aliasName}", null, 0, IntPtr.Zero);
+
+                // 重新開啟音檔
                 mciSendString($"open \"{txtPath.Text}\" type waveaudio alias {aliasName}", null, 0, IntPtr.Zero);
 
-                // 重複播放加上 repeat 參數
-                mciSendString($"play {aliasName} repeat", null, 0, IntPtr.Zero);
+                // 取得音檔總長度
+                StringBuilder lengthBuf = new StringBuilder(32);
+                mciSendString($"status {aliasName} length", lengthBuf, lengthBuf.Capacity, IntPtr.Zero);
+
+                if (int.TryParse(lengthBuf.ToString(), out int length))
+                {
+                    trackBarProgress.Maximum = length;
+                    trackBarProgress.Value = 0;
+
+                    TimeSpan totalTime = TimeSpan.FromMilliseconds(length);
+                    lblTime.Text = $"00:00 / {totalTime.ToString(@"mm\:ss")}";
+                }
+
+                // 記錄目前是循環播放模式
+                isLooping = true;
+
+                // 從頭開始播放，並設定 repeat 循環播放
+                mciSendString($"play {aliasName} from 0", null, 0, IntPtr.Zero);
+
+                // 啟動進度條計時器
                 timerProgress.Start();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show("無法循環播放音效檔!\n" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
             mciSendString($"stop {aliasName}", null, 0, IntPtr.Zero);
+
+            isLooping = false;
+
             timerProgress.Stop();
-            trackBarProgress.Value = 0; // 重置進度條
+            trackBarProgress.Value = 0;
+
+            TimeSpan totalTime = TimeSpan.FromMilliseconds(trackBarProgress.Maximum);
+            lblTime.Text = $"00:00 / {totalTime.ToString(@"mm\:ss")}";
         }
 
         private void btnEnd_Click(object sender, EventArgs e)
@@ -135,10 +180,16 @@ namespace WAVPlayer
                 {
                     trackBarProgress.Value = position;
 
-                    // 【新增】將目前播放進度(毫秒)與總長度轉換為 mm:ss 格式
                     TimeSpan currentTime = TimeSpan.FromMilliseconds(position);
                     TimeSpan totalTime = TimeSpan.FromMilliseconds(trackBarProgress.Maximum);
                     lblTime.Text = $"{currentTime.ToString(@"mm\:ss")} / {totalTime.ToString(@"mm\:ss")}";
+                }
+
+                // 如果是循環播放，而且已經接近結尾，就從頭再播一次
+                if (isLooping && position >= trackBarProgress.Maximum - 200)
+                {
+                    trackBarProgress.Value = 0;
+                    mciSendString($"play {aliasName} from 0", null, 0, IntPtr.Zero);
                 }
             }
         }
@@ -153,8 +204,15 @@ namespace WAVPlayer
             if (isDragging)
             {
                 int newPosition = trackBarProgress.Value;
-                // 使用 play 指令的 from 參數來指定從哪邊開始播 (單位：毫秒)
+
+                // 拖曳到新的位置後，從該位置繼續播放
                 mciSendString($"play {aliasName} from {newPosition}", null, 0, IntPtr.Zero);
+
+                // 立刻更新畫面上的時間
+                TimeSpan currentTime = TimeSpan.FromMilliseconds(newPosition);
+                TimeSpan totalTime = TimeSpan.FromMilliseconds(trackBarProgress.Maximum);
+                lblTime.Text = $"{currentTime.ToString(@"mm\:ss")} / {totalTime.ToString(@"mm\:ss")}";
+
                 isDragging = false;
             }
         }
